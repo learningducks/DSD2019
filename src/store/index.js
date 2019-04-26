@@ -14,10 +14,10 @@ export default new Vuex.Store({
   getters: {
     userinfo(state) {
       if (!state.userinfo.role) {
-        const info = JSON.parse(localStorage.getItem('userinfo'));
-        if (info.role) state.userinfo = info;
+        const userinfo = JSON.parse(localStorage.getItem('userinfo'));
+        if (userinfo.role) state.userinfo = userinfo;
       }
-      sessionStorage.setItem('userinfo', JSON.stringify(state.info));
+      sessionStorage.setItem('userinfo', JSON.stringify(state.userinfo));
       return state.userinfo;
     },
     token(state) {
@@ -25,9 +25,9 @@ export default new Vuex.Store({
     },
   },
   mutations: {
-    setUserinfo(state, info) {
-      sessionStorage.setItem('userinfo', JSON.stringify(info));
-      state.userinfo = info;
+    setUserinfo(state, userinfo) {
+      sessionStorage.setItem('userinfo', JSON.stringify(userinfo));
+      state.userinfo = userinfo;
     },
     setToken(state, token) {
       sessionStorage.setItem('token', token);
