@@ -88,13 +88,13 @@ class Lights():
                 if(data["type"] == "post"):
                     if(self.GetState() == 1):
                         self.Switch(0)
-                        self.ss.send('{"status":"0", "msg":"Operation successeful"}'.encode("utf8"))
+                        self.ss.send('{"status":"1", "msg":"Operation successeful"}'.encode("utf8"))
                         log = ('State changed: %d on ' % self.GetState() + time.asctime() + '\n')
                         print (log)
                         self.WriteLog(log)
                     elif(self.GetState() == 0):
                         self.Switch(1)
-                        self.ss.send('{"status":"0", "msg":"Operation successeful"}'.encode("utf8"))
+                        self.ss.send('{"status":"1", "msg":"Operation successeful"}'.encode("utf8"))
                         log = ('State changed: %d on ' % self.GetState() + time.asctime() + '\n')
                         print (log)
                         self.WriteLog(log)                    
