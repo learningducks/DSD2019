@@ -2,7 +2,7 @@
   <el-row class="container">
     <el-col :span="24" class="header">
       <el-col
-        span="10"
+        :span="10"
         class="logo"
         :class="collapsed ? 'logo-collapse-width' : 'logo-width'"
       >
@@ -21,7 +21,7 @@
           <el-dropdown-menu slot="dropdown">
             <el-dropdown-item disabled> {{ role }} </el-dropdown-item>
             <el-dropdown-item divided @click.native="logout"
-              >登出</el-dropdown-item
+              >退出</el-dropdown-item
             >
           </el-dropdown-menu>
         </el-dropdown>
@@ -31,7 +31,6 @@
       <aside :class="collapsed ? 'menu-collapsed' : 'menu-expanded'">
         <el-menu
           :default-active="$route.path"
-          class="el-menu-vertical-demo"
           unique-opened
           router
           v-show="!collapsed"
@@ -59,11 +58,47 @@
           class="el-menu el-menu-vertical-demo collapsed"
           v-show="collapsed"
           ref="menuCollapsed"
-        ></ul>
+        >
+          <li
+            v-for="(item, index) in $router.options.routes"
+            :key="index"
+            v-if="!item.hidden"
+            class="el-submenu item"
+          >
+            <template>
+              <div
+                class="el-submenu__title"
+                style="padding-left: 20px;"
+                @mouseover="showMenu(index, true)"
+                @mouseout="showMenu(index, false)"
+              >
+                <i :class="item.icon"></i>
+              </div>
+              <ul
+                class="el-menu submenu"
+                :class="'submenu-hook-' + index"
+                @mouseover="showMenu(index, true)"
+                @mouseout="showMenu(index, false)"
+              >
+                <li
+                  v-for="child in item.children"
+                  v-if="!child.hidden"
+                  :key="child.path"
+                  class="el-menu-item"
+                  style="padding-left: 40px;"
+                  :class="$route.path == child.path ? 'is-active' : ''"
+                  @click="$router.push(child.path)"
+                >
+                  {{ child.name }}
+                </li>
+              </ul>
+            </template>
+          </li>
+        </ul>
       </aside>
       <section class="content-container">
         <div class="grid-content bg-purple-light">
-          <el-col :span="24" class="breadcrumb-container">
+          <el-col ::span="24" class="breadcrumb-container">
             <strong class="title">{{ $route.name }}</strong>
             <el-breadcrumb separator="/" class="breadcrumb-inner">
               <el-breadcrumb-item
@@ -90,30 +125,37 @@ export default {
   data() {
     return {
       sysName: '智能光控系统',
-      nickname: '阿伟',
-      role: '管理员',
+      nickname: '',
+      role: '',
       collapsed: false,
     };
   },
   methods: {
     logout() {
+      const This = this;
       this.$confirm('确认退出吗?', '提示', {}).then(() => {
-        sessionStorage.removeItem('user');
-        this.$router.push('Login');
+        This.$store.commit('clear');
+        This.$router.push({ path: '/login' });
+        This.$message.success('退出成功');
       }).catch(() => {
 
       });
     },
     collapse() {
-      this.collapsed = !this.collapsed;
+      // this.collapsed = !this.collapsed;
+    },
+    showMenu(i, status) {
+      this.$refs.menuCollapsed.getElementsByClassName(`submenu-hook-${i}`)[0].style.display = status ? 'block' : 'none';
     },
   },
   mounted() {
-    let user = sessionStorage.getItem('user');
-    if (user) {
-      user = JSON.parse(user);
-      this.nickname = user.nickname;
-    }
+    this.nickname = this.$store.getters.userinfo.nickname;
+    const roleName = {
+      admin: '管理员',
+      teacher: '教师',
+      student: '学生',
+    };
+    this.role = roleName[this.$store.getters.userinfo.role];
   },
 };
 </script>
@@ -130,14 +172,14 @@ export default {
     height: 60px;
     line-height: 60px;
     background: $color-primary;
-    color: #fff;
+    color: whitesmoke;
     .userinfo {
       text-align: right;
       padding-right: 35px;
       float: right;
       .userinfo-inner {
         cursor: pointer;
-        color: #fff;
+        color: whitesmoke;
         img {
           width: 40px;
           height: 40px;
@@ -148,7 +190,6 @@ export default {
       }
     }
     .logo {
-      //width:230px;
       height: 60px;
       font-size: 22px;
       padding-left: 20px;
@@ -162,7 +203,7 @@ export default {
         margin: 10px 10px 10px 18px;
       }
       .txt {
-        color: #fff;
+        color: whitesmoke;
       }
     }
     .logo-width {
@@ -181,7 +222,6 @@ export default {
   }
   .main {
     display: flex;
-    // background: #324057;
     position: absolute;
     top: 60px;
     bottom: 0px;
@@ -189,9 +229,6 @@ export default {
     aside {
       flex: 0 0 230px;
       width: 230px;
-      // position: absolute;
-      // top: 0px;
-      // bottom: 0px;
       .el-menu {
         height: 100%;
       }
@@ -219,17 +256,10 @@ export default {
       width: 230px;
     }
     .content-container {
-      // background: #f1f2f7;
       flex: 1;
-      // position: absolute;
-      // right: 0px;
-      // top: 0px;
-      // bottom: 0px;
-      // left: 230px;
       overflow-y: scroll;
       padding: 20px;
       .breadcrumb-container {
-        //margin-bottom: 15px;
         .title {
           width: 200px;
           float: left;
@@ -240,7 +270,7 @@ export default {
         }
       }
       .content-wrapper {
-        background-color: #fff;
+        background-color: whitesmoke;
         box-sizing: border-box;
       }
     }

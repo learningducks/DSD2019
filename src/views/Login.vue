@@ -10,7 +10,7 @@
     <h3 class="title">系统登录</h3>
     <el-form-item prop="username">
       <el-input
-        v-model="loginForm.username"
+        v-model.number="loginForm.username"
         type="text"
         placeholder="用户名"
       ></el-input>
@@ -32,26 +32,26 @@
         plain
         :loading="loading"
         style="width: 100%;"
-        @click="lgoin"
+        @click="login"
         >登录</el-button
       >
     </el-form-item>
   </el-form>
 </template>
 <script>
-import { requestLogin } from '@/api/api';
-import md5 from 'js-md5';
+import { requestLogin } from '@/utils';
 
 export default {
   data() {
     return {
       loginForm: {
-        username: 'admin',
-        password: '123456',
+        username: '',
+        password: '',
       },
       rules: {
         username: [
           { required: true, message: '用户名不能为空！', trigger: 'blur' },
+          { type: 'number', message: '请输入学号或工号！', trigger: 'blur' },
         ],
         password: [
           { required: true, message: '密码不能为空！', trigger: 'blur' },
@@ -66,20 +66,16 @@ export default {
       this.$refs.loginForm.validate((valid) => {
         if (valid) {
           this.loading = true;
-          const loginParams = { UID: this.loginForm.username, password: md5(`${this.loginForm.password}helloworld`) };
-          requestLogin(loginParams).then((data) => {
+          requestLogin(this.loginForm).then((data) => {
+            const { token, userinfo } = data;
             this.loading = false;
-            const { status, msg, userinfo } = data;
-            // eslint-disable-next-line eqeqeq
-            if (status != 0) {
-              this.$message({
-                message: msg,
-                type: 'error',
-              });
-            } else {
-              sessionStorage.setItem('userinfo', JSON.stringify(userinfo));
-              this.$router.push('Home');
-            }
+            this.$store.commit('setToken', token);
+            this.$store.commit('setUserinfo', userinfo);
+            this.$router.push({ path: '/home' });
+            this.$message.success('登录成功');
+          }).catch((err) => {
+            this.loading = false;
+            this.$message.error(err);
           });
         }
       });
@@ -97,7 +93,7 @@ export default {
   margin: 180px auto;
   width: 350px;
   padding: 35px 35px 15px 35px;
-  background: #fff;
+  background: whitesmoke;
   border: 1px solid #eaeaea;
   box-shadow: 0 0 25px #cac6c6;
   .title {
