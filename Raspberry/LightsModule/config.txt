@@ -1,0 +1,5 @@
+Host:liyu.utad.pt
+Port:8888
+HID:1
+Type:Lights
+Authentication:WNJXYK
