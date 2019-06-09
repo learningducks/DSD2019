@@ -2,6 +2,13 @@
 
 > A Vue.js project
 
+## TODO
+
+- [ ] fix bugs of log/alarm function
+- [ ] add validator for form items
+- [ ] optimize keyboard interaction
+- [ ] optimize effect of display on a small screen
+
 ## Build Setup
 
 ``` bash
