@@ -313,7 +313,6 @@ export default {
     getRoleList() {
       const params = { option: 0 };
       requestRoleList(params).then((data) => {
-        console.log(data);
         this.roleList = data;
         this.roleList.forEach((role) => {
           role.renderString = this.arrayToString(role, {});

@@ -19,10 +19,7 @@ export const requestRoomList = params => axios.get('/interface/room', { params }
 
 export const updateRoom = params => axios.get('/interface/room', { params });
 
-export const requestHardwareList = params => axios.get('/interface/hardware', { params }).then((data) => {
-  console.log(data);
-  return data;
-});
+export const requestHardwareList = params => axios.get('/interface/hardware', { params });
 
 export const controlHardware = params => axios.get('/command/command', { params });
 

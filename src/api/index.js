@@ -20,7 +20,6 @@ axios.interceptors.request.use((config) => {
 
 // eslint-disable-next-line consistent-return
 axios.interceptors.response.use((response) => {
-  console.log(response);
   const status = Number(response.data.status);
   if (status === 0) {
     return response.data.info;
@@ -31,12 +30,6 @@ axios.interceptors.response.use((response) => {
   } else {
     return Promise.reject(response.data.message);
   }
-}, (error) => {
-  console.log(`in response interceptors:${error}`);
-  console.log(error.status);
-  console.log(error.message);
-  console.log(error.config);
-  return Promise.reject(error);
-});
+}, error => Promise.reject(error));
 
 export default axios;
