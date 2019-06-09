@@ -16,8 +16,8 @@ export default {
 body {
   margin: 0px;
   padding: 0px;
-  font-family: Helvetica Neue, Helvetica, PingFang SC, Hiragino Sans GB,
-    Microsoft YaHei, SimSun, sans-serif;
+  font-family: Microsoft YaHei, Helvetica, PingFang SC, Hiragino Sans GB, Arial,
+    sans-serif;
   font-size: 14px;
   -webkit-font-smoothing: antialiased;
 }
@@ -42,7 +42,6 @@ body {
 .toolbar {
   background: #f2f2f2;
   padding: 10px;
-  //border:1px solid #dfe6ec;
   margin: 10px 0px;
   .el-form-item {
     margin-bottom: 10px;
