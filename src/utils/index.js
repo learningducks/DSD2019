@@ -1,44 +1,44 @@
-import md5 from 'js-md5';
 import axios from '@/api';
 import { asyncRouterMap } from '@/router';
 
-const roleName = ['student', 'teacher', 'admin'];
-
-export const requestLogin = params => axios.post('/interface/login', {
-  UID: params.username,
-  password: md5(`${params.password}helloworld`),
-}).then(data => ({
-  token: data.info.SID,
+export const requestLogin = params => axios.get('/interface/login', { params }).then(data => ({
+  token: data.token,
   userinfo: {
-    uid: Number(data.info.UID),
-    nickname: data.info.Nickname,
-    role: roleName[Number(data.info.Authority)],
+    uid: data.id,
+    nickname: data.name,
+    permission: data.permission_str,
+    role: data.role,
   },
 }));
 
-export const getBuildingList = params => axios.get('/interface/building', { params }).then((data) => {
-  const buildingList = [];
-  data.vals.forEach((building) => {
-    buildingList.push({
-      buildingID: Number(building.BID),
-      buildingName: building.buildingName,
-    });
-  });
-  return buildingList;
+export const requestBuildingList = params => axios.get('/interface/building', { params });
+
+export const updateBuilding = params => axios.get('/interface/building', { params });
+
+export const requestRoomList = params => axios.get('/interface/room', { params });
+
+export const updateRoom = params => axios.get('/interface/room', { params });
+
+export const requestHardwareList = params => axios.get('/interface/hardware', { params }).then((data) => {
+  console.log(data);
+  return data;
 });
 
-export const getRoomList = params => axios.get('/interface/room', { params }).then((data) => {
-  const roomList = [];
-  data.vals.forEach((room) => {
-    roomList.push({ roomID: Number(room.RID) });
-  });
-  return roomList;
-});
+export const controlHardware = params => axios.get('/command/command', { params });
 
-export const removeRoom = (params) => {
+export const requestRaspiList = params => axios.get('/interface/raspi', { params });
 
-  // return axios
-};
+export const updateRaspi = params => axios.get('/interface/raspi', { params });
+
+export const requestUserList = params => axios.get('/interface/user', { params });
+
+export const updateUser = params => axios.get('/interface/user', { params });
+
+export const requestRoleList = params => axios.get('/interface/role', { params });
+
+export const updateRole = params => axios.get('/interface/role', { params });
+
+export const requestLogList = params => axios.get('/interface/log', { params });
 
 export const generateRoutes = (role) => {
   const accessedRoutes = asyncRouterMap.filter((route) => {
